@@ -7,18 +7,22 @@ int main() {
 	cin.tie(0);	
 	int n, v;
 	cin >> n >> v;
-	// check gas fuel can accommodate all the way to the 'n'-th city
-	if (n - 1 < v) {
-		cout << n - 1 << '\n';
-		return 0;
+	int current_liter = 0;
+	int required_liter = n - 1;
+	int cost = 0;
+	for (int i = 0; i < n; i++) {
+		// find the minimum gas fuel needed (choose between the remaining liter capacity of the
+		// vehicle and the required liter)
+		int fill = min(v - current_liter, required_liter);
+		// add 'fill' to 'current_liter' (current gas fuel of the vehicle)
+		current_liter += fill;
+		// decrement 'current_liter' (travel to next city)
+		current_liter--;
+		// calculate 'cost' by adding the stored value to the 'fill' multiplied to the payment per city (current index + 1)
+		cost += (fill * (i + 1));
+		// subtract 'required_liter' by the 'fill'
+		required_liter -= fill;
 	}
-	// otherwise, buy 'v' minus one gas fuels to the 'v'-th city (since we will start at city 1)
-	int res = v - 1;
-	// start the loop after the 'v' minus one-th city
-	for (int i = res + 1; i < n; i++) {
-		// to drive between cities with numbers i and i + 1, buy liter in the city with number i  − v + 1
-		res += (i - v + 1);
-	}
-	cout << res << '\n';
+	cout << cost << '\n';
 	return 0;
 }
